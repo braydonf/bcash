@@ -18,15 +18,32 @@ make install
 We've used the `/path/to/build` as the prefix as we're likely going to have multiple builds that may conflict.
 
 
-Build fuzz programs:
+Build fuzz program `verify`:
 ```
-export CXXFLAGS="-I/path/to/build/include -L/path/to/build/lib"
-make
+CXXFLAGS="-I/path/to/build/include -L/path/to/build/lib" make
 ```
+
+To generate randomized data for testing:
+```
+node generate.js verify
+```
+That will automatically generate files in the `./data` directory that can be used for input for testing.
+
+
+To run the tests:
+```
+LD_LIBRARY_PATH="/path/to/build/lib" ./detect.sh
+```
+
+This will use the `./data` directory as input sources and run both `verify.c` and `verify.js` to check that the result is the same.
 
 ## Notes
 
-Fuzz testing against Node.js bindings to [libbitcoinconsensus](https://github.com/Bitcoin-ABC/bitcoin-abc/blob/master/doc/shared-libraries.md) is fragile, as the build process is dependent upon the build system for configuration in way that makes working with gyp build process crufty and error prone. So instead we have a simple C program linked to against libbitcoinconsensus that will take input from a file, similarly we have an identical version for bcash implementation. The results of the implementations can be compared by giving the same data to each program to execute. This should also provide compatability with tools such as [AFL](http://lcamtuf.coredump.cx/afl/).
+We've gone with building a C/C++ program linked to against `libbitcoinconsensus` using the intended build toolchain from Bitcoin-ABC with an identical bcash JavaScript/Node.js implementation. Both take input from a file and verify the execution of the script. This is done for a few reasons:
+
+- Minimize debugging time when compiling Node.js bindings to `libbitcoinconsensus`. There is a shared and static library from the C++ implementation of Bitcoin Cash ([Bitcoin-ABC](https://www.bitcoinabc.org/)), however the build process is mostly dependent upon `autotools` for generation of files such as `config/bitcoin-config.h` and `ecmult_static_context.h` and some header files have been changed to assume C++ usage, when gcc and C is sometimes used, and some header files would be missing in that case.
+- Compatibility with tools such as [American Fuzzy Lop (AFL)](https://en.wikipedia.org/wiki/American_fuzzy_lop_(fuzzer))
+- Use the exact same code used in Bitcoin-ABC Minimize any differences that may be introduced by the build system.
 
 ## Related Links
 
