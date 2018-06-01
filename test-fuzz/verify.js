@@ -6,7 +6,7 @@
 
 'use strict';
 
-const bcoin = require('bcoin')
+const bcash = require('..')
 const fs = require('fs')
 
 const filename = process.argv[2];
@@ -22,14 +22,14 @@ fs.readFile(filename, 'utf8', (err, data) => {
     const outputScriptBuffer = Buffer.from(lines[0], 'hex');
     const txBuffer = Buffer.from(lines[1], 'hex');
 
-    const tx = bcoin.TX.fromRaw(txBuffer);
+    const tx = bcash.TX.fromRaw(txBuffer);
     const inputIndex = parseInt(lines[2]);
     const input = tx.inputs[inputIndex].script;
-    const output = bcoin.Script.fromRaw(outputScriptBuffer);
+    const output = bcash.Script.fromRaw(outputScriptBuffer);
 
     const flags = parseInt(lines[3]);
 
-    bcoin.Script.verify(
+    bcash.Script.verify(
       input,
       null, // TODO remove as argument?
       output,

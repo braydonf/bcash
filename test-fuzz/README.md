@@ -32,7 +32,7 @@ That will automatically generate files in the `./data` directory that can be use
 
 **To run the tests**:
 ```
-LD_LIBRARY_PATH="/path/to/build/lib" ./detect.sh
+LD_LIBRARY_PATH="/path/to/build/lib" node detect.js
 ```
 
 This will use the `./data` directory as input sources and run both `verify.c` and `verify.js` to check that the result is the same.
