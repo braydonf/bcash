@@ -2,9 +2,9 @@
 
 This is a collection of scripts and tests for running fuzz testing Script against multiple implementations.
 
-## Build
+## Build and run tests
 
-Clone, build and install libbitcoinconsensus shared library:
+**Clone, build and install libbitcoinconsensus shared library**:
 ```
 git clone https://github.com/Bitcoin-ABC/bitcoin-abc.git
 git checkout v0.17.1
@@ -18,19 +18,19 @@ make install
 We've used the `/path/to/build` as the prefix as we're likely going to have multiple builds that may conflict.
 
 
-Build fuzz program `verify`:
+**Build fuzz program `verify`**:
 ```
 CXXFLAGS="-I/path/to/build/include -L/path/to/build/lib" make
 ```
 
-To generate randomized data for testing:
+**To generate randomized data for testing**:
 ```
 node generate.js verify
 ```
 That will automatically generate files in the `./data` directory that can be used for input for testing.
 
 
-To run the tests:
+**To run the tests**:
 ```
 LD_LIBRARY_PATH="/path/to/build/lib" ./detect.sh
 ```
