@@ -27,16 +27,15 @@ fs.readFile(filename, 'utf8', (err, data) => {
     const input = tx.inputs[inputIndex].script;
     const output = bcoin.Script.fromRaw(outputScriptBuffer);
 
-    const witness = null; // segwit todo
     const flags = parseInt(lines[3]);
 
     bcoin.Script.verify(
       input,
-      witness, // segwit todo
+      null, // TODO remove as argument?
       output,
       tx,
       inputIndex,
-      0, // segwit todo
+      0, // TODO randomize value?
       flags
     );
     console.log(1);
