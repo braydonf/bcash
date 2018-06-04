@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*!
  * generate.js - generate data for script fuzz testing
  * Copyright (c) 2018, the bcoin developers (MIT License).

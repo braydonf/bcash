@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*!
  * verify.js - verify script for fuzz testing
  * Copyright (c) 2018, the bcoin developers (MIT License).

@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*!
  * detect.js - fuzz testing script implementation difference detection
  * Copyright (c) 2018, the bcoin developers (MIT License).
