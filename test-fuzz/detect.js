@@ -14,18 +14,16 @@ const { readdirSync } = require('fs');
 const NUM_CPUS = require('os').cpus().length;
 const CONCURRENCY = NUM_CPUS;
 
-// TODO streaming/iterative listing of files,
-// see: https://github.com/nodejs/node/issues/583
 const files = readdirSync(path.resolve(__dirname, './data'));
 
 async function execAsync(cmd) {
   return new Promise((resolve, reject) => {
-	exec(cmd, (error, stdout, stderr) => {
-	  if (error) {
-		return reject(error);
-	  }
-	  resolve(stdout);
-	});
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(stdout);
+    });
   })
 }
 
@@ -34,23 +32,35 @@ async function detect(file) {
   const abcPath = path.resolve(__dirname, `./verify`);
   const filePath = path.resolve(__dirname, `./data/${file}`);
 
-  const bcash = await execAsync(`node ${bcashPath} ${filePath}`);
+  const bcash = await execAsync(`${bcashPath} ${filePath}`);
   const abc = await execAsync(`${abcPath} ${filePath}`);
 
-  return (bcash == abc);
+  const match = (bcash == abc);
+
+  if (!match) {
+    throw new Error(`Implementation difference: ${filePath}`);
+  }
+
+  return match;
 }
 
 async function detectSet(files) {
   return Promise.all(files.map(async (f) => await detect(f)));
 }
 
+function logStats(count, length) {
+  console.info('verified: %d, total: %s, time: %s', count, length, new Date().toISOString());
+}
+
 (async function() {
+  const length = files.length;
+  let count = 0;
+  logStats(count, length);
+  setInterval(() => logStats(count, length), 5000);
 
-  for (let i = 0; i < files.length; i += CONCURRENCY) {
-	const results = await detectSet(files.slice(i, i + CONCURRENCY));
-	console.log('results', results);
+  for (let i = 0; i < length; i += CONCURRENCY) {
+    await detectSet(files.slice(i, i + CONCURRENCY));
+    count += CONCURRENCY;
   }
-
-  // TODO handle tail of files
-  // TODO if the results differ, save and log the result
+  await detectSet(files.slice(length - length % CONCURRENCY, length));
 })();
