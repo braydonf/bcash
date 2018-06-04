@@ -47,8 +47,7 @@ async function detectSet(files) {
 (async function() {
 
   for (let i = 0; i < files.length; i += CONCURRENCY) {
-	const set = files.slice(i, i + CONCURRENCY);
-	const results = await detectSet(set);
+	const results = await detectSet(files.slice(i, i + CONCURRENCY));
 	console.log('results', results);
   }
 
