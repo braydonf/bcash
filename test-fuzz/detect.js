@@ -25,10 +25,10 @@ async function execAsync(cmd) {
   })
 }
 
-async function detect(file) {
+async function detect(datadir, file) {
   const bcashPath = path.resolve(__dirname, `./verify.js`);
   const abcPath = path.resolve(__dirname, `./verify`);
-  const filePath = path.resolve(__dirname, `./data/${file}`);
+  const filePath = path.resolve(datadir, `./${file}`);
 
   const bcash = await execAsync(`${bcashPath} ${filePath}`);
   const abc = await execAsync(`${abcPath} ${filePath}`);
@@ -45,12 +45,18 @@ async function detect(file) {
   return result;
 }
 
-async function detectSet(files) {
-  return Promise.all(files.map(async (f) => await detect(f)));
+async function detectSet(datadir, fileset) {
+  return Promise.all(fileset.map(async (f) => await detect(datadir, f)));
 }
 
 (async function() {
-  const files = readdirSync(path.resolve(__dirname, './data'));
+  let datadir = path.resolve(__dirname, './data');
+  if (process.argv.length > 2) {
+    datadir = path.resolve(__dirname, process.argv[2]);
+  }
+  console.info('Using test data directory: %s', datadir);
+
+  const files = readdirSync(datadir);
 
   const length = files.length;
   let success = 0;
@@ -75,9 +81,9 @@ async function detectSet(files) {
 
   let results = [];
 
-  async function tryDetectSet(fileSet) {
+  async function tryDetectSet(datadir, fileset) {
     try {
-      results = await detectSet(fileSet);
+      results = await detectSet(datadir, fileset);
     } catch(err) {
       console.log(err);
       process.exit(1);
@@ -93,9 +99,9 @@ async function detectSet(files) {
   }
 
   for (let i = 0; i + CONCURRENCY < length; i += CONCURRENCY) {
-    await tryDetectSet(files.slice(i, i + CONCURRENCY));
+    await tryDetectSet(datadir, files.slice(i, i + CONCURRENCY));
   }
-  await tryDetectSet(files.slice(length - (length % CONCURRENCY), length));
+  await tryDetectSet(datadir, files.slice(length - (length % CONCURRENCY), length));
 
   closeProgram();
 })();
