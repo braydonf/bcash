@@ -58,7 +58,7 @@ function logStats(count, length) {
   logStats(count, length);
   setInterval(() => logStats(count, length), 5000);
 
-  for (let i = 0; i < length; i += CONCURRENCY) {
+  for (let i = 0; i + CONCURRENCY < length; i += CONCURRENCY) {
     await detectSet(files.slice(i, i + CONCURRENCY));
     count += CONCURRENCY;
   }
