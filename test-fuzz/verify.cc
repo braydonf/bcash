@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
     unsigned int txToLen;
     unsigned int nIn;
     unsigned int flags;
+    int64_t amount = 0; // TODO include amount in test data
 
     int status = 0;
     const char *filepath = argv[1];
@@ -81,8 +82,17 @@ int main(int argc, char *argv[])
         return status;
 
     bitcoinconsensus_error err = bitcoinconsensus_ERR_OK;
-    status = bitcoinconsensus_verify_script(scriptPubKey, scriptPubKeyLen,
-                                            txTo, txToLen, nIn, flags, &err);
+
+    if (flags & bitcoinconsensus_SCRIPT_ENABLE_SIGHASH_FORKID ||
+        flags & bitcoinconsensus_SCRIPT_FLAGS_VERIFY_WITNESS_DEPRECATED) {
+
+        status = bitcoinconsensus_verify_script_with_amount(scriptPubKey, scriptPubKeyLen, amount,
+                                                            txTo, txToLen, nIn, flags, &err);
+
+    } else {
+        status = bitcoinconsensus_verify_script(scriptPubKey, scriptPubKeyLen,
+                                                txTo, txToLen, nIn, flags, &err);
+    }
 
     printf("%d\n", status);
 
