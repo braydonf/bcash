@@ -40,11 +40,8 @@ fs.readFile(filename, 'utf8', (err, data) => {
       flags
     );
     console.log(1);
-    process.exit(1);
-
   } catch(err) {
     console.log(0);
-    process.exit(0);
   }
-
+  process.exit(0);
 });

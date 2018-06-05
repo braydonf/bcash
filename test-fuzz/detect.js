@@ -14,8 +14,6 @@ const { readdirSync } = require('fs');
 const NUM_CPUS = require('os').cpus().length;
 const CONCURRENCY = NUM_CPUS;
 
-const files = readdirSync(path.resolve(__dirname, './data'));
-
 async function execAsync(cmd) {
   return new Promise((resolve, reject) => {
     exec(cmd, (error, stdout, stderr) => {
@@ -37,30 +35,67 @@ async function detect(file) {
 
   const match = (bcash == abc);
 
-  if (!match) {
-    throw new Error(`Implementation difference: ${filePath}`);
-  }
+  const result = {
+    match: match,
+    bcash: bcash,
+    abc: abc,
+    filePath: filePath
+  };
 
-  return match;
+  return result;
 }
 
 async function detectSet(files) {
   return Promise.all(files.map(async (f) => await detect(f)));
 }
 
-function logStats(count, length) {
-  console.info('verified: %d, total: %s, time: %s', count, length, new Date().toISOString());
-}
-
 (async function() {
+  const files = readdirSync(path.resolve(__dirname, './data'));
+
   const length = files.length;
-  let count = 0;
-  logStats(count, length);
-  setInterval(() => logStats(count, length), 5000);
+  let success = 0;
+  let failed = 0;
+
+  logStats(success, failed, length);
+  const interval = setInterval(() => logStats(success, failed, length), 5000);
+
+  function logStats(success, failed, length) {
+    console.info('success: %d, failed: %d, total: %s, time: %s',
+                 success, failed, length, new Date().toISOString());
+  }
+
+  function logFailure(result) {
+    console.error('failed for %s with bcash: %d, abc: %d', result.filePath, result.bcash, result.abc);
+  }
+
+  function closeProgram() {
+    logStats(success, failed, length);
+    clearInterval(interval);
+  }
+
+  let results = [];
+
+  async function tryDetectSet(fileSet) {
+    try {
+      results = await detectSet(fileSet);
+    } catch(err) {
+      console.log(err);
+      process.exit(1);
+    }
+    results.forEach((result) => {
+      if (result.match) {
+        success += 1;
+      } else {
+        failed += 1;
+        logFailure(result);
+      }
+    });
+  }
 
   for (let i = 0; i + CONCURRENCY < length; i += CONCURRENCY) {
-    await detectSet(files.slice(i, i + CONCURRENCY));
-    count += CONCURRENCY;
+    await tryDetectSet(files.slice(i, i + CONCURRENCY));
   }
-  await detectSet(files.slice(length - length % CONCURRENCY, length));
+  await tryDetectSet(files.slice(length - (length % CONCURRENCY), length));
+
+  closeProgram();
 })();
