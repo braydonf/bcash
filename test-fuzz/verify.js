@@ -7,7 +7,8 @@
 
 'use strict';
 
-const bcash = require('..')
+const TX = require('../lib/primitives/tx');
+const Script = require('../lib/script/script');
 const fs = require('fs')
 
 const filename = process.argv[2];
@@ -23,14 +24,14 @@ fs.readFile(filename, 'utf8', (err, data) => {
     const outputScriptBuffer = Buffer.from(lines[0], 'hex');
     const txBuffer = Buffer.from(lines[1], 'hex');
 
-    const tx = bcash.TX.fromRaw(txBuffer);
+    const tx = TX.fromRaw(txBuffer);
     const inputIndex = parseInt(lines[2]);
     const input = tx.inputs[inputIndex].script;
-    const output = bcash.Script.fromRaw(outputScriptBuffer);
+    const output = Script.fromRaw(outputScriptBuffer);
 
     const flags = parseInt(lines[3]);
 
-    bcash.Script.verify(
+    Script.verify(
       input,
       null, // TODO remove as argument?
       output,
