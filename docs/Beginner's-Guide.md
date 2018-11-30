@@ -5,8 +5,8 @@ Bcash is an _alternative_ implementation of the bitcoin protocol, written in nod
 ## Requirements
 
 - Linux, OSX, or Windows (\*) (\*\*)
-- node.js >=v7.6.0
-- npm >=v4.0.0
+- node.js >=v8.14.0
+- npm >=v6.4.1
 - python2 (for node-gyp)
 - gcc/g++ (for leveldb and secp256k1)
 - git (optional, see below)
@@ -17,21 +17,31 @@ Bcash is an _alternative_ implementation of the bitcoin protocol, written in nod
 
 ## Build & Install
 
-Bcash is meant to be installed via npm, but for the security conscious, it may be better to clone from github.
-
-### Installing via NPM
-
-``` bash
-$ npm install -g bcash --production
-```
+Bcash is meant to be installed via git for security purposes, as there are security issues when installing via npm. All tagged commits for releases should be signed by @nodar-chkuaselidze's or @tuxcanfly's [PGP Key](#maintainer-public-keys). Signed copies of node.js are available from [nodejs.org][node], or from your respective OS's package repositories.
 
 ### Installing via Git
 
 ``` bash
 $ git clone git://github.com/bcoin-org/bcash.git
 $ cd bcash
-$ npm install -g --production
 ```
+
+For a specific release:
+```
+$ git tag
+$ git tag -v <version> # verify signature
+$ git checkout <version>
+```
+
+Install dependencies:
+```
+$ npm install
+$ npm install -g # link globally
+```
+
+**Note:** Dependencies are checked for integrity using `package-lock.json`. However `npm` _will not_ make these checks with `npm install -g` and it will link your installation globally so that `bcash` is in your path _(e.g. $ bcash)_.
+
+
 ### Installing via Docker
 
 Check [bcash-docker](https://github.com/bcoin-org/bcash-docker)
@@ -159,6 +169,93 @@ Note: Selfish mode is not recommended. We encourage you to _help_ the network by
 
 See [Configuration][configuration].
 
-[keybase]: https://keybase.io/chjj#show-public
+
+## Maintainer Public Keys
+
+@nodar-chkuaselidze
+- keybase: https://keybase.io/nodech
+- github: https://github.com/nodar-chkuaselidze
+
+```
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+=kxhO
+-----END PGP PUBLIC KEY BLOCK-----
+```
+
+@tuxcanfly
+- github: https://github.com/tuxcanfly/
+
+```
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQENBFEnqhwBCADPdVCVmbmUZdLp+qmgSdFU3ttrskOguIZgTp0uK+BlfjxraVgX
+5erI+SLCTFPVYKbIL+kwvpFucr18+B6imxjzZ5v9VpHNO58bj1yPVYe+Yr0twkEK
+I56leMjthqjwuau96fksg6y/Ys0MjNLvfgiU3e2dM+eJCjEZeBeR8j+afqBjvQPR
+/pWTcPBswjuhtlLes+iEcjsnJED5nyFNA0nx4iEDuejNLAPplKS0R90sOh1PueP5
+vah9qsqRw9R9hXacBObiuDBt7snlRmdkIaCW7nTiylfYRYGxsdseH9nUS2naor3R
+/G99cBc/SlBYVVRXIjCJCrcv52LzZ7z01HbTABEBAAG0P0phdmVkIEtoYW4gKFBH
+UCBrZXkgZm9yIG15IHByaXZhdGUgZmlsZXMpIDx0dXhjYW5mbHlAZ21haWwuY29t
+PokBOAQTAQIAIgUCUSeqHAIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQ
+fjF0W5BFhOb+cggAtDv9jZkS09cq73gH9bMRUIat2D0ssHcZPQKPo+F1qEyO8ozS
+yw7SWTYO4IauE61h8VNk/eVbzW+Hw+qMQHtCXV6B9ITkYN3WSWXVXb7XgUJ9HalH
+Tk1SksnqpTI1yvCNgp6U3EWMT9G+qtEeTdOCZVHAi8NDz+3tMsm0/WK88EQeXY01
+J/QN9y7AsDBlcJbQJGFJpQRJGDNDWAKPiroqDytifgJhGbHu4c6wQCGkXkwzrptF
+vOMThsPNv9vGbwFN5OPWM4+f3Rc7HVASFjXsvPn3WrpW7l1Rs8lsKe7AJbo75gdZ
+5roUL1syII/IdOmsl4G9FjXbW48kwLp38+ooSbkBDQRRJ6ocAQgA2l//Yh3HmbdU
+HjHC6sqeV80jHG24LfZKPmos0SmYpdxiEX44MLp0dD+RtOH0b8vtPgscz3cArFwf
+pdZBnym+kO0a/7BV3PsJQmpWDh9KEUOA8QgAtPpJKR5MYCSrQclcEHfkojKR4KYU
+6bgtRRIo0QF66VZm6LMcTeF1LmhMM0GZ7t2dPFl8HflGmoKgd8s38D0Fqv94Jvz9
+JwsGxD2waO8D0B+wdmIUQjLfjuA3z+LLwlSKmOoCawREJmz2JwbA/D3F+ZnF3sbu
+4wTXJkFTRrrVKQxXx2/tVVh6M4Nh3AViUbv6M/+bAkcgKYsNeq2ADyRHh4cGmiMv
+xMXlWRTXuwARAQABiQEfBBgBAgAJBQJRJ6ocAhsMAAoJEH4xdFuQRYTmOJYH/jwu
+y5c/gjsoTm5H98Sk7NeIMLYYbIiqLf4ZdwhPBduV5otJozG9uoBN+e7GOPue/VP6
+kfakbUE64lfb2WjIVdIkhOUcUyvmHpTmhKzUq2pi7gR58l/14ujclzi5RMIkpXrN
+gcQbYWC1WNDwMn0SaMjiwV5YwMiVPF5HSu+KeJRM4znqZLcYfjODtg2ERYZJREnT
+JeQeYKw/7fgEfqBGwNQDKkUDd6IXT5JJN51qFS2Ld3hVmq/hDgqO7GZXRVh8T3Ju
+2sD1g8ku4C7ZNG3e+WoFPJVap7VldKoOPXlvyFyTt3buERBsABG2BoRRALYxF8g1
+S2FVPXj8KIZQI+sj6Tw=
+=uY1+
+-----END PGP PUBLIC KEY BLOCK-----
+```
+
 [node]: https://nodejs.org/dist/v7.5.0/
 [configuration]: Configuration.md
