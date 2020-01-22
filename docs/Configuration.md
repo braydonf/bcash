@@ -140,7 +140,6 @@ For example, to run a bcoin and wallet node on a remote server that you can acce
 - `max-files`: Max open files for leveldb.
 - `cache-size`: Size (in MB) of leveldb cache and write buffer.
 - `witness`: Make SegWit enabled wallets.
-- `checkpoints`: Trust hard-coded blockchain checkpoints.
 
 ### Wallet http server:
 
